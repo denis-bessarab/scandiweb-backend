@@ -15,9 +15,13 @@
                 $this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
             } 
             catch (PDOException $e) {
-                die('Connection Failed : ' . $e->getMessage());
+                die('Connection Failed');
             }
             return $this->conn;
+        }
+
+        public function message($content,$status) {
+            return json_encode(['message' => $content,'error' => $status]);
         }
 
         public function test_input($data) {
