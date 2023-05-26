@@ -6,7 +6,7 @@ class Database extends Config
     public function fetch()
     {
         $sql = 'SELECT * FROM products';
-        $stmt = $this->conn->prepare($sql);
+        $stmt = $this->getConnection()->prepare($sql);
         $stmt->execute();
         $rows = $stmt->fetchAll();
         return $rows;
@@ -17,7 +17,7 @@ class Database extends Config
         try {
             $sql = 'INSERT INTO users (name, email, phone) VALUES (:name, :email, :phone)';
             $sql = 'INSERT INTO products (sku,attributes) VALUES (:sku,:attributes)';
-            $stmt = $this->conn->prepare($sql);
+            $stmt = $this->getConnection()->prepare($sql);
             $stmt->execute(['sku' => $sku, 'attributes' => $attributes]);
             echo "Product successfully added";
         } catch (PDOException $e) {
@@ -30,7 +30,7 @@ class Database extends Config
     {
         try {
             $sql = "DELETE FROM products WHERE id IN (" . implode(',', array_fill(0, count($deleteList), '?')) . ")";
-            $stmt = $this->conn->prepare($sql);
+            $stmt = $this->getConnection()->prepare($sql);
             $stmt->execute($deleteList);
             echo "Products successfully deleted";
         } catch (PDOException $e) {
