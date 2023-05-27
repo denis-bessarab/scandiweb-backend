@@ -1,123 +1,43 @@
 <?php
-
-use PDO;
-use Product;
+require_once 'app/Interfaces/ProductRepositoryInterface.php';
+require_once 'app/Database/Database.php';
 
 class ProductRepository implements ProductRepositoryInterface
 {
-    /** @var PDO $db */
-    protected $db;
+    private Database $database;
+    private PDO $conn;
 
-    public function __construct(PDO $db)
+    public function __construct(Database $database)
     {
-        $this->db = $db;
+        $this->database = $database;
+        $this->conn = $database->getConnection();
     }
 
-    /**
-     * @return array
-     */
-    public function findAll()
+    public function findAll(): array
     {
-        $stmt = $this->db->query(
-            'SELECT
-                id,
-                name
-            FROM products
-            WHERE active = 1'
-        );
-
-        $products = [];
-        while ($stmt->fetch(PDO::FETCH_ASSOC)) {
-            $product = new Product();
-            $product
-                ->setId($result['id'])
-                ->setName($result['name'])
-            ;
-        }
-        return $products;
-    }
-
-    /**
-     * @param int $id
-     *
-     * @return Product
-     */
-    public function findById($id)
-    {
-        $stmt = $this->db->prepare(
-            'SELECT
-                id,
-                name
-            FROM products
-            WHERE id = :id
-                AND active = 1
-            LIMIT 1'
-        );
-        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $sql = 'SELECT * FROM products WHERE active = 1';
+        $stmt = $this->conn->prepare($sql);
         $stmt->execute();
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        $product = new Product();
-        $product
-            ->setId($result['id'])
-            ->setName($result['name'])
-        ;
+        return $stmt->fetchAll();
     }
 
-    /**
-     * @param Product $product
-     *
-     * @return int
-     */
-    public function create(Product $product)
+    public function createProduct(Product|Book|Furniture|DVD $product): bool
     {
-        $stmt = $this->db->prepare(
-            'INSERT INTO products (
-                name
-            ) VALUES (
-                :name
-            )'
-        );
-        $stmt->bindValue(':name', $product->getName(), PDO::PARAM_STR);
-        $stmt->execute();
-
-        $id = $this->db->lastInsertId();
-        $product->setId(￼$id);
-        return $id;
-    }
-
-    /**
-     * @param Product $product
-     *
-     * @return bool
-     */
-    public function update(Product $product)
-    {
-        $stmt = $this->db->prepare(
-            'UPDATE products SET
-                name = :name
-            WHERE id = :id
-                AND active = 1'
-        );
-        $stmt->bindValue(':name', $product->getName(), PDO::PARAM_STR);
-        $stmt->bindValue(':id', $product->getId(), PDO::PARAM_INT);
+        $sql = 'INSERT INTO products (sku,product_name,price_usd,product_attributes) VALUES (:sku,:product_name,:price_usd,:product_attributes)';
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindValue(':sku', $product->getSku());
+        $stmt->bindValue(':product_name', $product->getName());
+        $stmt->bindValue(':price_usd', $product->getPrice(), PDO::PARAM_INT);
+        $stmt->bindValue(':product_attributes', $product->getAttributes());
         return $stmt->execute();
     }
 
-    /**
-     * @param Product $product
-     *
-     * @return bool
-     */
-    public function delete(Product $product)
+    public function deleteById(array $ids): bool
     {
-        $stmt = $this->db->prepare(
-            'UPDATE products SET
-                active = 0
-            WHERE id = :id
-                AND active = 1'
-        );
-        $stmt->bindValue(':id', $product->getId(), PDO::PARAM_INT);
+        $ids = array(1, 2, 3, 4);
+        $sql = 'UPDATE products SET active = 0 WHERE id IN :id AND active = 1';
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindValue(':id', $ids);
         return $stmt->execute();
     }
 }
