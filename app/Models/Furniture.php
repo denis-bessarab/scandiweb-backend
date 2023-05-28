@@ -3,14 +3,20 @@ require_once 'Product.php';
 
 class Furniture extends Product
 {
-    private object $dimensions;
+    private int $height_cm;
+    private int $width_cm;
+    private int $length_cm;
 
-    private function __construct($sku, $name, $price, $dimensions)
+    private string $product_type = 'Furniture';
+
+    public function __construct($sku, $name, $price, $height_cm, $width_cm, $length_cm)
     {
         $this->setSku($sku);
         $this->setName($name);
         $this->setPrice($price);
-        $this->setDimensions($dimensions);
+        $this->setHeight($height_cm);
+        $this->setWidth($width_cm);
+        $this->setLength($length_cm);
     }
 
     public function setSku($sku): void
@@ -23,33 +29,58 @@ class Furniture extends Product
         return $this->sku;
     }
 
-    public function setName($name): void
+    public function setName($product_name): void
     {
-        $this->name = $name;
+        $this->product_name = $product_name;
     }
 
     public function getName(): string
     {
-        return $this->name;
+        return $this->product_name;
     }
 
-    public function setPrice($price): void
+    public function setPrice($price_usd): void
     {
-        $this->price = $price;
+        $this->price_usd = $price_usd;
     }
 
     public function getPrice(): int
     {
-        return $this->price;
+        return $this->price_usd;
     }
 
-    public function setDimensions($dimensions): void
+    public function setHeight($height_cm): void
     {
-        $this->dimensions = $dimensions;
+        $this->height_cm = $height_cm;
     }
 
-    public function getDimensions(): FurnitureDimensions
+    public function getHeight(): int
     {
-        return $this->dimensions;
+        return $this->height_cm;
+    }
+
+    public function setWidth($width_cm): void
+    {
+        $this->width_cm = $width_cm;
+    }
+
+    public function getWidth(): int
+    {
+        return $this->width_cm;
+    }
+
+    public function setLength($length_cm): void
+    {
+        $this->length_cm = $length_cm;
+    }
+
+    public function getLength(): int
+    {
+        return $this->length_cm;
+    }
+
+    public function getProductType(): string
+    {
+        return $this->product_type;
     }
 }

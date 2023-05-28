@@ -3,14 +3,15 @@ require_once 'Product.php';
 
 class Book extends Product
 {
-    private int $weight;
+    private int $weight_kg;
+    private string $product_type = 'Book';
 
-    public function __construct($sku, $name, $price, $weight)
+    public function __construct($sku, $product_name, $price_usd, $weight_kg)
     {
         $this->setSku($sku);
-        $this->setName($name);
-        $this->setPrice($price);
-        $this->setAttributes($weight);
+        $this->setName($product_name);
+        $this->setPrice($price_usd);
+        $this->setWeight($weight_kg);
     }
 
     public function setSku($sku): void
@@ -23,33 +24,38 @@ class Book extends Product
         return $this->sku;
     }
 
-    public function setName($name): void
+    public function setName($product_name): void
     {
-        $this->name = $name;
+        $this->product_name = $product_name;
     }
 
     public function getName(): string
     {
-        return $this->name;
+        return $this->product_name;
     }
 
-    public function setPrice($price): void
+    public function setPrice($price_usd): void
     {
-        $this->price = $price;
+        $this->price_usd = $price_usd;
     }
 
     public function getPrice(): int
     {
-        return $this->price;
+        return $this->price_usd;
     }
 
-    public function setAttributes($weight): void
+    public function setWeight($weight_kg): void
     {
-        $this->weight = $weight;
+        $this->weight_kg = $weight_kg;
     }
 
-    public function getAttributes(): object
+    public function getWeight(): int
     {
-        return json_decode($this->weight);
+        return $this->weight_kg;
+    }
+
+    public function getProductType(): string
+    {
+        return $this->product_type;
     }
 }

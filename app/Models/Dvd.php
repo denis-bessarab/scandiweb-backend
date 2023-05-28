@@ -3,14 +3,16 @@ require_once 'Product.php';
 
 class DVD extends Product
 {
-    private int $size;
+    private int $size_mb;
 
-    private function __construct($sku, $name, $price, $size)
+    private string $product_type = 'DVD';
+
+    public function __construct($sku, $product_name, $price_usd, $size_mb)
     {
         $this->setSku($sku);
-        $this->setName($name);
-        $this->setPrice($price);
-        $this->setAttributes($size);
+        $this->setName($product_name);
+        $this->setPrice($price_usd);
+        $this->setSize($size_mb);
     }
 
     public function setSku($sku): void
@@ -23,33 +25,38 @@ class DVD extends Product
         return $this->sku;
     }
 
-    public function setName($name): void
+    public function setName($product_name): void
     {
-        $this->name = $name;
+        $this->product_name = $product_name;
     }
 
     public function getName(): string
     {
-        return $this->name;
+        return $this->product_name;
     }
 
-    public function setPrice($price): void
+    public function setPrice($price_usd): void
     {
-        $this->price = $price;
+        $this->price_usd = $price_usd;
     }
 
     public function getPrice(): int
     {
-        return $this->price;
+        return $this->price_usd;
     }
 
-    public function setAttributes($size): void
+    public function setSize($size_mb): void
     {
-        $this->size = $size;
+        $this->size_mb = $size_mb;
     }
 
-    public function getAttributes(): object
+    public function getSize(): int
     {
-        return json_decode($this->size);
+        return $this->size_mb;
+    }
+
+    public function getProductType(): string
+    {
+        return $this->product_type;
     }
 }

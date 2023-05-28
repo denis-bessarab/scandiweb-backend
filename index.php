@@ -1,24 +1,12 @@
 <?php
-$routes = [
-    'GET:/getProducts' => 'ProductController@getProducts',
-    'POST:/createProduct' => 'ProductController@createProduct',
-    'DELETE:/deleteProducts' => 'ProductController@deleteProducts',
-];
 
-$requestUri = $_SERVER['REQUEST_URI'];
-$requestMethod = $_SERVER['REQUEST_METHOD'];
-$baseUrl = 'api/';
-$path = str_replace($baseUrl, '', $requestUri);
-$routeKey = $requestMethod . ':' . $path;
-$routeHandler = $routes[$routeKey] ?? null;
+require 'app/Router.php';
 
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
+header("Access-Control-Allow-Headers: Content-Type");
 
-if ($routeHandler) {
-    [$controllerName, $methodName] = explode('@', $routeHandler);
-    require_once 'app/Controllers/' . $controllerName . '.php';
-    $controller = new $controllerName();
-    $controller->$methodName();
-} else {
-    echo '404 - Page not found';
-}
+$router = new Router();
+$router->handleRequest($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
+
 

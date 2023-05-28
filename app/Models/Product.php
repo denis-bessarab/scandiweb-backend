@@ -2,23 +2,19 @@
 
 abstract class Product
 {
-    // protected int $id;
     protected string $sku;
-    protected string $name;
-    protected string $price;
-
-    // abstract public function setId();
-    // abstract public function getId();
+    protected string $product_name;
+    protected string $price_usd;
 
     abstract public function setSku($sku);
 
     abstract public function getSku();
 
-    abstract public function setName($name);
+    abstract public function setName($product_name);
 
     abstract public function getName();
 
-    abstract public function setPrice($price);
+    abstract public function setPrice($price_usd);
 
     abstract public function getPrice();
 }

@@ -4,7 +4,11 @@ interface ProductRepositoryInterface
 {
     public function findAll();
 
-    public function createProduct(Product $product);
+    public function createBook(Book $book);
+
+    public function createDVD(DVD $dvd);
+
+    public function createFurniture(Furniture $furniture);
 
     public function deleteById(array $ids);
 }
