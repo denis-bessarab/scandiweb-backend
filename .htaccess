@@ -1,11 +1,4 @@
 RewriteEngine On
 
-#Remove .php extension
-RewriteRule ^getProducts/?$ getProducts.php [NC,L]
-RewriteRule ^addProduct/?$ addProduct.php [NC,L]
-RewriteRule ^deleteProduct/?$ deleteProduct.php [NC,L]
-
 #Rewrite URL
-RewriteRule ^getProducts/?$ getProducts.php [NC,L]
-RewriteRule ^addProduct/?$ getProducts.php [NC,L]
-RewriteRule ^deleteProduct/?$ deleteProduct.php [NC,L]
+RewriteRule ^ index.php [NC,L]
