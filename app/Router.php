@@ -22,9 +22,7 @@ class Router
             require_once 'app/Controllers/' . $controllerName . '.php';
             $controller = new $controllerName();
             echo $controller->$methodName();
-            http_response_code(200);
         } else {
-            http_response_code(404);
             echo '404 - Page not found';
         }
     }
