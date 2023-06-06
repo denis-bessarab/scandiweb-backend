@@ -12,6 +12,12 @@ class ProductService
     private Database $database;
     private ProductRepository $productRepository;
 
+    private array $createProductMethods = [
+        'Book' => 'createBook',
+        'DVD' => 'createDVD',
+        'Furniture' => 'createFurniture',
+    ];
+
     public function __construct()
     {
         $this->database = new Database();
@@ -30,28 +36,13 @@ class ProductService
 
     public function createProduct(): string|int
     {
-        $input = $this->getInput();
-        $product_type = $input->product_type;
+        $input = new InputData($this->getInput());
+        $product_type = $input->getProductType();
+        $method = $this->createProductMethods[$product_type];
         try {
-            switch ($product_type) {
-                case 'Book':
-                    $book = new Book($input->sku, $input->product_name, $input->price_usd, $input->weight_kg);
-                    $this->productRepository->createBook($book);
-                    break;
-                case 'DVD':
-                    $dvd = new DVD($input->sku, $input->product_name, $input->price_usd, $input->size_mb);
-                    $this->productRepository->createDVD($dvd);
-                    break;
-                case 'Furniture':
-                    $furniture = new Furniture($input->sku, $input->product_name, $input->price_usd, $input->height_cm, $input->width_cm, $input->length_cm);
-                    $this->productRepository->createFurniture($furniture);
-                    break;
-                default:
-                    throw new PDOException("Invalid product type: " . $product_type);
-            }
+            $this->productRepository->$method($input);
             http_response_code(200);
             return "Product successfully added";
-
         } catch (PDOException $e) {
             http_response_code(400);
             if ($e->getCode() === '45000') {

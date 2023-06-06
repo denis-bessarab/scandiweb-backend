@@ -1,6 +1,7 @@
 <?php
 require_once 'app/Interfaces/ProductRepositoryInterface.php';
 require_once 'app/Database/Database.php';
+require_once 'app/Models/InputData.php';
 
 class ProductRepository implements ProductRepositoryInterface
 {
@@ -19,8 +20,9 @@ class ProductRepository implements ProductRepositoryInterface
         return $stmt->fetchAll();
     }
 
-    public function createBook(Book $book): bool
+    public function createBook(InputData $input): bool
     {
+        $book = new Book($input->getSku(), $input->getProductName(), $input->getPriceUsd(), $input->getWeightKg());
         $sql = 'INSERT INTO products (sku,product_name,price_usd,product_type,weight_kg) VALUES (:sku,:product_name,:price_usd,:product_type,:weight_kg)';
         $stmt = $this->conn->prepare($sql);
         $stmt->bindValue(':sku', $book->getSku());
@@ -31,8 +33,9 @@ class ProductRepository implements ProductRepositoryInterface
         return $stmt->execute();
     }
 
-    public function createDVD(DVD $dvd): bool
+    public function createDVD(InputData $input): bool
     {
+        $dvd = new DVD($input->getSku(), $input->getProductName(), $input->getPriceUsd(), $input->getSizeMb());
         $sql = 'INSERT INTO products (sku,product_name,price_usd,product_type,size_mb) VALUES (:sku,:product_name,:price_usd,:product_type,:size_mb)';
         $stmt = $this->conn->prepare($sql);
         $stmt->bindValue(':sku', $dvd->getSku());
@@ -43,8 +46,9 @@ class ProductRepository implements ProductRepositoryInterface
         return $stmt->execute();
     }
 
-    public function createFurniture(Furniture $furniture): bool
+    public function createFurniture(InputData $input): bool
     {
+        $furniture = new Furniture($input->getSku(), $input->getProductName(), $input->getPriceUsd(), $input->getHeightCm(), $input->getWidthCm(), $input->getLengthCm());
         $sql = 'INSERT INTO products (sku,product_name,price_usd,product_type,height_cm,width_cm,length_cm) VALUES (:sku,:product_name,:price_usd,:product_type,:height_cm,:width_cm,:length_cm)';
         $stmt = $this->conn->prepare($sql);
         $stmt->bindValue(':sku', $furniture->getSku());
